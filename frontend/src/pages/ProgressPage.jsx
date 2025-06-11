@@ -20,6 +20,41 @@ const ProgressPage = () => {
   // CEFR levels
   const cefrLevels = ['A1', 'A2', 'B1', 'B2', 'C1'];
 
+  // Assessment icons mapping
+  const assessmentIcons = {
+    'leadership': '👥',
+    'problem solving': '🧩',
+    'presentation': '📊',
+    'adaptability': '🔄',
+    'communication': '💬',
+    'listening': '👂',
+    'reading': '📖',
+    'writing': '✍️',
+    'speaking': '🗣️',
+    'puzzle': '🧩',
+    'leetcode': '💻',
+    'fast questions': '⚡',
+    'default': '📋'
+  };
+
+  // Helper function to normalize assessment type for icon lookup
+  const normalizeType = (type) => {
+    if (!type) return 'default';
+    const normalized = type.toLowerCase();
+    
+    if (normalized.includes('leadership')) return 'leadership';
+    if (normalized.includes('problem') || normalized.includes('puzzle') || normalized.includes('leetcode') || normalized.includes('fast')) return 'problem solving';
+    if (normalized.includes('presentation')) return 'presentation';
+    if (normalized.includes('adaptability')) return 'adaptability';
+    if (normalized.includes('listening')) return 'listening';
+    if (normalized.includes('reading')) return 'reading';
+    if (normalized.includes('writing')) return 'writing';
+    if (normalized.includes('speaking')) return 'speaking';
+    if (normalized.includes('communication')) return 'communication';
+    
+    return 'default';
+  };
+
   useEffect(() => {
     const fetchProgress = async () => {
       try {
@@ -65,6 +100,7 @@ const ProgressPage = () => {
             console.log('DEBUG: Puzzle Game score:', latest.score, 'percentage:', latest.percentage);
           }
         } catch (e) { /* ignore if fails */ }
+        
         // Replace or add puzzle-game result in completedData
         if (puzzleResult) {
           completedData = completedData.filter(a => a.assessmentType !== 'puzzle-game');
@@ -115,6 +151,7 @@ const ProgressPage = () => {
           }
           return a;
         });
+        
         // Normalize: always have a 'percentage' field for all assessment types
         const normalized = merged.map(a => {
           let percent = 0;
@@ -128,7 +165,9 @@ const ProgressPage = () => {
             percentage: percent
           };
         });
+        
         setCompletedAssessments(normalized);
+        
         // Debug log for assessment types
         console.log('DEBUG: completedAssessments', normalized.map(a => a.assessmentType));
         setTotalCompleted(progressData.totalCompleted || 0);
@@ -230,7 +269,7 @@ const ProgressPage = () => {
     return Math.round(totalScore / assessments.length);
   };
 
-  // Remove any duplicate declaration of speakingAssessments
+  // Calculate speaking assessments and average
   const speakingAssessments = completedAssessments.filter(
     a => a.assessmentType && a.assessmentType.startsWith('Speaking')
   );
@@ -334,159 +373,139 @@ const ProgressPage = () => {
     <DashboardLayout title="Progress Overview">
       <div className="space-y-6 sm:space-y-8">
         {/* Progress Stats */}
+        
+        {/* Category Progress Overview Cards */}
         <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-[#592538]">{totalCompleted}</span>
-              <span className="text-gray-600">Completed Tests</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Progress Overview</h2>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl font-bold text-blue-600">{Math.round(progress)}%</span>
+                <span className="text-gray-600">Overall Progress</span>
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-[#592538]">{totalAvailable}</span>
-              <span className="text-gray-600">Available Tests</span>
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Average Score</h2>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl font-bold text-green-600">{calculateAverageScore()}%</span>
+                <span className="text-gray-600">Across All Tests</span>
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-[#592538]">{Math.round(progress)}%</span>
-              <span className="text-gray-600">Overall Progress</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-[#592538]">{calculateAverageScore()}%</span>
-              <span className="text-gray-600">Average Score</span>
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Assessments</h2>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl font-bold text-purple-600">
+                  {completedAssessments.length}
+                </span>
+                <span className="text-gray-600">Completed</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Category Progress */}
+        {/* Assessment Categories */}
         <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8">
           <h2 className="text-xl sm:text-2xl font-semibold text-[#592538] mb-4 sm:mb-6">
             Assessment Categories
           </h2>
-          <div className="space-y-4 sm:space-y-6">
-            {displayCategories.map((category) => {
-              const assessments = assessmentsByCategory[category.key] || [];
-              const hasAssessments = assessments.length > 0;
-              // Use custom progress for CEFR skills
-              let categoryProgress = getCategoryProgress(category.key);
-              if (category.key === 'Speaking') categoryProgress = getSpeakingProgress();
-              if (category.key === 'Listening') categoryProgress = getListeningProgress();
-              if (category.key === 'Reading') categoryProgress = getReadingProgress();
-              if (category.key === 'Writing') categoryProgress = getWritingProgress();
-              
-              return (
-                <div
-                  key={category.key}
-                  className={`border rounded-lg p-4 sm:p-6 hover:shadow-md transition duration-300 ${
-                    !hasAssessments ? 'opacity-70' : ''
-                  }`}
-                >
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
-                    <div>
-                      <h3 className="text-lg sm:text-xl font-medium text-[#592538]">
-                        {category.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm sm:text-base">
-                        {hasAssessments
-                          ? `${assessments.length} assessment${assessments.length !== 1 ? 's' : ''} completed`
-                          : 'No assessments completed'}
-                      </p>
-                    </div>
-                    {hasAssessments && (
+          
+          {completedAssessments.length > 0 ? (
+            <div className="space-y-4 sm:space-y-6">
+              {displayCategories.map((category) => {
+                const assessments = assessmentsByCategory[category.key] || [];
+                const hasAssessments = assessments.length > 0;
+
+                // Use custom progress for CEFR skills
+                let categoryProgress = getCategoryProgress(category.key);
+                if (category.key === 'Speaking') categoryProgress = getSpeakingProgress();
+                if (category.key === 'Listening') categoryProgress = getListeningProgress();
+                if (category.key === 'Reading') categoryProgress = getReadingProgress();
+                if (category.key === 'Writing') categoryProgress = getWritingProgress();
+
+                // Only show categories that have assessments
+                if (!hasAssessments) return null;
+
+                return (
+                  <div
+                    key={category.key}
+                    className="group relative bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    {/* Category Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {category.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {`${assessments.length} assessment${assessments.length !== 1 ? 's' : ''} completed`}
+                        </p>
+                      </div>
                       <div className="flex items-center space-x-2">
-                        <span className="px-3 py-1 rounded-full text-sm sm:text-base bg-green-100 text-green-800">
+                        <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
                           Completed
                         </span>
-                        <span className="text-lg sm:text-xl font-semibold text-[#592538]">
+                        <span className="text-2xl font-bold text-gray-900 group-hover:text-[#2563eb] transition-colors">
                           {category.key === 'Speaking'
                             ? `${speakingAverage}%`
                             : `${calculateAverageScore(assessments)}%`}
                         </span>
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm text-gray-600">Progress</span>
-                      <span className="text-sm font-medium text-[#592538]">{categoryProgress}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div
-                        className="bg-[#592538] h-2.5 rounded-full"
-                        style={{ width: `${categoryProgress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Individual Assessment Progress */}
-        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 lg:p-8">
-          <h2 className="text-xl sm:text-2xl font-semibold text-[#592538] mb-4 sm:mb-6">
-            Recent Assessments
-          </h2>
-          <div className="space-y-4 sm:space-y-6">
-            {completedAssessments.length > 0 ? (
-              (() => {
-                // Normalize assessment type for deduplication
-                const normalizeType = (type) => {
-                  if (!type) return '';
-                  const t = type.toLowerCase().replace(/\s+/g, '-');
-                  if (t.includes('puzzle-game') || t.includes('puzzle')) return 'puzzle-game';
-                  if (t.includes('fast-questions') || t.includes('fast')) return 'fast-questions';
-                  if (t.includes('leetcode')) return 'leetcode';
-                  return t;
-                };
-                const dedupedAssessments = [];
-                const seenTypes = new Set();
-                completedAssessments
-                  .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
-                  .forEach(assessment => {
-                    const normType = normalizeType(assessment.assessmentType);
-                    if (
-                      normType === 'fast-questions'
-                    ) {
-                      dedupedAssessments.push(assessment);
-                    } else if (!seenTypes.has(normType)) {
-                      dedupedAssessments.push(assessment);
-                      seenTypes.add(normType);
-                    }
-                  });
-                return dedupedAssessments.slice(0, 5).map((assessment) => (
-                  <div
-                    key={assessment._id || assessment.assessmentType + assessment.completedAt}
-                    className="border rounded-lg p-4 sm:p-6 hover:shadow-md transition duration-300"
-                  >
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-medium text-[#592538]">
-                          {assessment.assessmentType}
-                        </h3>
-                        <p className="text-gray-600 text-sm sm:text-base">
-                          {new Date(assessment.completedAt).toLocaleDateString()}
-                          {assessment.language && ` - ${assessment.language.charAt(0).toUpperCase() + assessment.language.slice(1)}`}
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="px-3 py-1 rounded-full text-sm sm:text-base bg-green-100 text-green-800">
-                          Completed
-                        </span>
-                        <span className="text-lg sm:text-xl font-semibold text-[#592538]">
-                          {getDisplayScore(assessment) !== null && getDisplayScore(assessment) !== undefined
-                            ? `${Math.round(getDisplayScore(assessment))}%`
-                            : 'Pending'}
-                        </span>
-                      </div>
+                    {/* Individual Assessments */}
+                    <div className="space-y-3">
+                      {assessments.map((assessment) => (
+                        <div
+                          key={assessment._id || assessment.assessmentType + assessment.completedAt}
+                          className="group relative p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+                        >
+                          {/* Assessment Type Badge */}
+                          <div className="absolute -top-2 -left-2 w-8 h-8 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center shadow-sm">
+                            <span className="text-lg">{assessmentIcons[normalizeType(assessment.assessmentType)] || assessmentIcons['default']}</span>
+                          </div>
+
+                          {/* Assessment Details */}
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0 ml-6">
+                            <div className="flex-1">
+                              <h4 className="text-base font-medium text-gray-900 group-hover:text-[#2563eb] transition-colors">
+                                {assessment.assessmentType}
+                              </h4>
+                              <p className="text-sm text-gray-500">
+                                {new Date(assessment.completedAt).toLocaleDateString()}
+                                {assessment.language && ` - ${assessment.language.charAt(0).toUpperCase() + assessment.language.slice(1)}`}
+                              </p>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                                Completed
+                              </span>
+                              <span className="text-lg font-bold text-gray-900 group-hover:text-[#2563eb] transition-colors">
+                                {getDisplayScore(assessment) !== null && getDisplayScore(assessment) !== undefined
+                                  ? `${Math.round(getDisplayScore(assessment))}%`
+                                  : 'Pending'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ));
-              })()
-            ) : (
-              <div className="text-center py-8">
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
                 <p className="text-gray-500">No assessments completed yet.</p>
+                <p className="text-sm text-gray-400">Start your first assessment to track your progress!</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </DashboardLayout>
