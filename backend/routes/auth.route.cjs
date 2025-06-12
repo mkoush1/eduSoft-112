@@ -24,6 +24,13 @@ const users = [
 // User login
 router.post('/user/login', async (req, res) => {
   try {
+    console.log('User login attempt:', req.body);
+    
+    // Check if request body exists
+    if (!req.body) {
+      return res.status(400).json({ message: 'Request body is missing' });
+    }
+    
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -66,6 +73,13 @@ router.post('/user/login', async (req, res) => {
 // Supervisor login
 router.post('/supervisor/login', async (req, res) => {
   try {
+    console.log('Supervisor login attempt:', req.body);
+    
+    // Check if request body exists
+    if (!req.body) {
+      return res.status(400).json({ message: 'Request body is missing' });
+    }
+    
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -97,6 +111,55 @@ router.post('/supervisor/login', async (req, res) => {
         name: supervisor.name,
         email: supervisor.email,
         role: supervisor.role
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Simple login endpoint that works with both user types
+router.post('/login', async (req, res) => {
+  try {
+    console.log('Login attempt:', req.body);
+    
+    // Check if request body exists
+    if (!req.body) {
+      return res.status(400).json({ message: 'Request body is missing' });
+    }
+    
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    
+    const user = users.find(u => u.email === email);
+    
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '1h' }
+    );
+    
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
       }
     });
   } catch (error) {

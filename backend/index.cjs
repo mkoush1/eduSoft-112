@@ -6,6 +6,10 @@ const fs = require('fs');
 
 const app = express();
 
+// Parse JSON request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Enable CORS for all routes with specific configuration
 app.use(cors({
   origin: '*',
@@ -33,6 +37,14 @@ app.use((req, res, next) => {
     return;
   }
   
+  next();
+});
+
+// Log all requests for debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
   next();
 });
 
