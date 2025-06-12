@@ -2,10 +2,10 @@
   "name": "edusoft-backend",
   "version": "1.0.0",
   "description": "Backend for EduSoft application",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "type": "module",
   "keywords": [],
@@ -22,10 +22,7 @@
     "express-async-handler": "^1.2.0",
     "express-fileupload": "^1.5.1",
     "express-validator": "^7.2.1",
-
-
     "googleapis": "^149.0.0",
-
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^6.15.0",
     "mongoose": "^7.8.6",

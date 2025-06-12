@@ -26,6 +26,7 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET); // Debug log to verify .env 
 // Verify MongoDB URI
 console.log('MongoDB URI:', process.env.MONGODB_URI ? 'Found' : 'Not Found');
 
+// Create Express app
 const app = express();
 
 // Middleware
@@ -47,15 +48,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS configuration
+// CORS configuration - enhanced for preflight requests
 const corsOptions = {
-  origin: true,
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
+
+// Handle OPTIONS requests explicitly
+app.options('*', (req, res) => {
+  res.status(204).end();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -126,13 +134,18 @@ app.use((err, req, res, next) => {
 // Initialize database connection
 connectDB();
 
-// Start server
-const PORT = 5000; // Changed from 5003 to 5000
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Test the API at: http://localhost:${PORT}/api/test`);
-  console.log(`Writing assessment endpoint: http://localhost:${PORT}/api/writing-assessment/evaluate`);
-  console.log(`Speaking assessment endpoint: http://localhost:${PORT}/api/speaking-assessment/evaluate`);
-  console.log(`Speaking assessment review endpoint: http://localhost:${PORT}/api/speaking-assessment/pending`);
-  console.log(`Reading assessment endpoint: http://localhost:${PORT}/api/reading-assessment/submit`);
-}); 
+// Start server if this file is run directly
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Test the API at: http://localhost:${PORT}/api/test`);
+    console.log(`Writing assessment endpoint: http://localhost:${PORT}/api/writing-assessment/evaluate`);
+    console.log(`Speaking assessment endpoint: http://localhost:${PORT}/api/speaking-assessment/evaluate`);
+    console.log(`Speaking assessment review endpoint: http://localhost:${PORT}/api/speaking-assessment/pending`);
+    console.log(`Reading assessment endpoint: http://localhost:${PORT}/api/reading-assessment/submit`);
+  });
+}
+
+// Export the app for use in other files
+export default app; 
