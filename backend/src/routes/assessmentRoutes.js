@@ -2,7 +2,7 @@ import express from 'express';
 import Assessment from '../models/Assessment.js';
 import TestQuestion from '../models/TestQuestion.js';
 import LeadershipQuestion from '../models/leadership_testBank.js';
-import AssessmentResult from '../models/AssessmentResult.js';
+import AssessmentResult from '../models/assessmentResult.js';
 
 import { authenticateToken, isAdmin } from '../middleware/auth.js';
 import User from '../models/User.js';
