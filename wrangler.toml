@@ -1,0 +1,17 @@
+name = "edusoft-app"
+compatibility_date = "2025-06-12"
+main = "src/index.js"
+
+# For frontend deployment - specify the directory with built assets
+[site]
+bucket = "./frontend/dist"
+
+# Routes all requests to your Worker
+[build]
+command = "cd frontend && npm run build"
+
+# Environment variables
+[vars]
+VITE_REACT_APP_BACKEND_BASEURL = "https://api.edusoft-112.com"  # Replace with your actual backend URL
+
+# Add any additional configuration as needed 

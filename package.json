@@ -4,7 +4,12 @@
   "description": "EduSoft is a comprehensive educational management system that provides a platform for supervisors and users to manage educational content and track progress.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd frontend && npm run build",
+    "deploy": "npx wrangler deploy",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
   },
   "keywords": [],
   "author": "",
@@ -18,5 +23,9 @@
     "leetcode-query": "^2.0.0",
     "mongoose": "^8.15.1",
     "multer": "^2.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wrangler": "^4.19.2"
   }
 }
