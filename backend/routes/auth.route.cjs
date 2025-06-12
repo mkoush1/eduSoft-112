@@ -8,14 +8,14 @@ const users = [
   {
     id: '1',
     email: 'user@example.com',
-    password: '$2a$10$CwTycUXWue0Thq9StjUM0uQxTmrYVpPqnTW.rV.0TJP1plGrVw7JO', // password: password
+    password: '$2a$10$IbPgdXcGI8IMmCrHykhMuO/qfnkUuF4UZM04d9AK9uFepjS8XDo.G', // password: password
     name: 'Test User',
     role: 'user'
   },
   {
     id: '2',
     email: 'supervisor@example.com',
-    password: '$2a$10$CwTycUXWue0Thq9StjUM0uQxTmrYVpPqnTW.rV.0TJP1plGrVw7JO', // password: password
+    password: '$2a$10$IbPgdXcGI8IMmCrHykhMuO/qfnkUuF4UZM04d9AK9uFepjS8XDo.G', // password: password
     name: 'Test Supervisor',
     role: 'supervisor'
   }
@@ -24,26 +24,32 @@ const users = [
 // User login
 router.post('/user/login', async (req, res) => {
   try {
-    console.log('User login attempt:', req.body);
+    console.log('User login attempt with request body:', req.body);
+    console.log('Request headers:', req.headers);
     
     // Check if request body exists
     if (!req.body) {
+      console.log('Request body is missing');
       return res.status(400).json({ message: 'Request body is missing' });
     }
     
     const { email, password } = req.body;
+    console.log('Extracted credentials:', { email, password: password ? '****' : undefined });
     
     if (!email || !password) {
+      console.log('Missing credentials:', { email: !!email, password: !!password });
       return res.status(400).json({ message: 'Email and password are required' });
     }
     
     const user = users.find(u => u.email === email && u.role === 'user');
     
     if (!user) {
+      console.log('User not found for email:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -55,6 +61,7 @@ router.post('/user/login', async (req, res) => {
       { expiresIn: '1h' }
     );
     
+    console.log('Login successful for user:', user.email);
     res.json({
       token,
       user: {
@@ -73,26 +80,32 @@ router.post('/user/login', async (req, res) => {
 // Supervisor login
 router.post('/supervisor/login', async (req, res) => {
   try {
-    console.log('Supervisor login attempt:', req.body);
+    console.log('Supervisor login attempt with request body:', req.body);
+    console.log('Request headers:', req.headers);
     
     // Check if request body exists
     if (!req.body) {
+      console.log('Request body is missing');
       return res.status(400).json({ message: 'Request body is missing' });
     }
     
     const { email, password } = req.body;
+    console.log('Extracted credentials:', { email, password: password ? '****' : undefined });
     
     if (!email || !password) {
+      console.log('Missing credentials:', { email: !!email, password: !!password });
       return res.status(400).json({ message: 'Email and password are required' });
     }
     
     const supervisor = users.find(u => u.email === email && u.role === 'supervisor');
     
     if (!supervisor) {
+      console.log('Supervisor not found for email:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
     const isMatch = await bcrypt.compare(password, supervisor.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -104,6 +117,7 @@ router.post('/supervisor/login', async (req, res) => {
       { expiresIn: '1h' }
     );
     
+    console.log('Login successful for supervisor:', supervisor.email);
     res.json({
       token,
       user: {
@@ -122,26 +136,32 @@ router.post('/supervisor/login', async (req, res) => {
 // Simple login endpoint that works with both user types
 router.post('/login', async (req, res) => {
   try {
-    console.log('Login attempt:', req.body);
+    console.log('Login attempt with request body:', req.body);
+    console.log('Request headers:', req.headers);
     
     // Check if request body exists
     if (!req.body) {
+      console.log('Request body is missing');
       return res.status(400).json({ message: 'Request body is missing' });
     }
     
     const { email, password } = req.body;
+    console.log('Extracted credentials:', { email, password: password ? '****' : undefined });
     
     if (!email || !password) {
+      console.log('Missing credentials:', { email: !!email, password: !!password });
       return res.status(400).json({ message: 'Email and password are required' });
     }
     
     const user = users.find(u => u.email === email);
     
     if (!user) {
+      console.log('User not found for email:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -153,6 +173,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1h' }
     );
     
+    console.log('Login successful for:', user.email);
     res.json({
       token,
       user: {

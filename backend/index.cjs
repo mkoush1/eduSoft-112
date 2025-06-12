@@ -53,6 +53,27 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
+// Test route to verify JSON body parsing
+app.post('/api/test-body-parsing', (req, res) => {
+  console.log('Test body parsing route hit');
+  console.log('Request body:', req.body);
+  console.log('Content-Type:', req.headers['content-type']);
+  
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ 
+      error: 'Empty or missing request body',
+      receivedBody: req.body,
+      contentType: req.headers['content-type']
+    });
+  }
+  
+  res.json({ 
+    success: true, 
+    message: 'Body parsing successful',
+    receivedBody: req.body
+  });
+});
+
 // Import routes directly
 const authRoutes = require('./routes/auth.route.cjs');
 const userRoutes = require('./routes/user.route.cjs');
