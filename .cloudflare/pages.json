@@ -1,0 +1,56 @@
+{
+  "buildConfig": {
+    "buildCommand": "npm run build",
+    "outputDirectory": "frontend/dist",
+    "rootDirectory": ".",
+    "nodeVersion": "18"
+  },
+  "deploymentStrategy": "all-routes-to-index",
+  "environmentVariables": {
+    "NODE_VERSION": "18",
+    "NPM_VERSION": "9"
+  },
+  "compatibility": {
+    "browserslist": [
+      "last 2 versions",
+      "not dead",
+      "not IE 11"
+    ]
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+} 

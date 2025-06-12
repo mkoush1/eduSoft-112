@@ -9,6 +9,8 @@ EduSoft is a comprehensive educational management system that provides a platfor
 - Dashboard for both roles
 - Password Reset functionality
 - Modern and responsive UI
+- Environment variable configuration for backend URL
+- Cloudflare Pages deployment support
 
 ## Tech Stack
 
@@ -25,6 +27,10 @@ EduSoft is a comprehensive educational management system that provides a platfor
 - MongoDB
 - JWT Authentication
 
+### Deployment
+- Cloudflare Pages
+- Cloudflare Workers
+
 ## Project Structure
 
 ```
@@ -36,72 +42,102 @@ EduSoft/
 │   │   ├── services/   # API services
 │   │   └── utils/      # Utility functions
 │   └── public/         # Static assets
+│       ├── _headers    # Cloudflare Pages headers configuration
+│       └── _redirects  # Cloudflare Pages redirects configuration
 │
-└── backend/            # Node.js backend application
-    ├── src/
-    │   ├── models/     # Database models
-    │   ├── routes/     # API routes
-    │   ├── services/   # Business logic
-    │   └── utils/      # Utility functions
-    └── config/         # Configuration files
+├── backend/            # Node.js backend application
+│   ├── src/
+│   │   ├── models/     # Database models
+│   │   ├── routes/     # API routes
+│   │   ├── services/   # Business logic
+│   │   └── utils/      # Utility functions
+│   └── config/         # Configuration files
+│
+├── src/                # Cloudflare Worker scripts
+│   └── index.js        # Main worker entry point
+│
+├── .cloudflare/        # Cloudflare configuration
+│   └── pages.json      # Pages configuration
+│
+└── wrangler.toml       # Wrangler configuration for Cloudflare Workers
 ```
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - MongoDB
 - npm or yarn
+- Cloudflare account (for deployment)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Os4203/eduSoft.git
-cd EduSoft
+git clone https://github.com/mkoush1/eduSoft-112.git
+cd eduSoft-112
 ```
 
-2. Install frontend dependencies:
+2. Install all dependencies:
 ```bash
-cd frontend
-npm install
+npm run setup
 ```
 
-3. Install backend dependencies:
-```bash
-cd ../backend
-npm install
-```
-
-4. Create a .env file in the backend directory with the following variables:
+3. Create a .env file in the backend directory with the following variables:
 ```
 PORT=5000
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 ```
 
-5. Create a .env file in the frontend directory with the following variables:
+4. Create a .env file in the frontend directory with the following variables:
 ```
 VITE_REACT_APP_BACKEND_BASEURL=http://localhost:5000
 ```
 
-### Running the Application
+### Running the Application Locally
 
-1. Start the backend server:
+1. Start the development servers:
 ```bash
-cd backend
-npm start
-```
-
-2. Start the frontend development server:
-```bash
-cd frontend
 npm run dev
 ```
 
 The application will be available at:
 - Frontend: http://localhost:5173
-- Backend: http://localhost:5000 (or the value of VITE_REACT_APP_BACKEND_BASEURL)
+- Backend: ${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}
+
+## Deployment to Cloudflare
+
+### Prerequisites
+
+1. Install Wrangler CLI:
+```bash
+npm install -g wrangler
+```
+
+2. Login to Cloudflare:
+```bash
+wrangler login
+```
+
+### Deployment Steps
+
+1. Build the frontend:
+```bash
+npm run build
+```
+
+2. Deploy to Cloudflare Workers:
+```bash
+npm run deploy
+```
+
+3. Alternatively, deploy to Cloudflare Pages:
+```bash
+npm run deploy:pages
+```
+
+For more detailed deployment instructions, see [README-cloudflare.md](./README-cloudflare.md).
 
 ## API Documentation
 
@@ -119,24 +155,6 @@ The application will be available at:
 - GET /api/supervisors/dashboard - Get supervisor dashboard data
 - POST /api/supervisors/create-course - Create new course
 
-## Authentication
-
-The application uses a simple JWT-based authentication system. For demo purposes, the backend includes mock users with plaintext passwords:
-
-- User credentials: `user@example.com` / `password`
-- Supervisor credentials: `supervisor@example.com` / `password`
-
-### Recent Fixes
-
-We recently addressed authentication issues in the deployed application:
-
-1. Fixed JSON body parsing in the backend
-2. Simplified password verification for demo purposes
-3. Added detailed logging for troubleshooting
-4. Ensured proper CORS configuration for cross-origin requests
-
-For production use, this authentication system should be replaced with a more secure implementation using properly hashed passwords and a database.
-
 ## Contributing
 
 1. Fork the repository
@@ -151,4 +169,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-Osama - [GitHub](https://github.com/Os4203) 
+Osama - [GitHub](https://github.com/mkoush1)

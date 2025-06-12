@@ -8,10 +8,27 @@ bucket = "./frontend/dist"
 
 # Routes all requests to your Worker
 [build]
-command = "cd frontend && npm run build"
+command = "npm install && npm run build"
+cwd = "."
+watch_dir = "frontend/src"
 
 # Environment variables
 [vars]
 VITE_REACT_APP_BACKEND_BASEURL = "https://api.edusoft-112.com"  # Replace with your actual backend URL
+
+# Routes configuration
+[routes]
+pattern = "/api/*"
+script = "src/index.js"
+
+[[rules]]
+type = "NavigationPreload"
+enable = true
+
+# Cache configuration
+[cache_settings]
+browserTTL = 86400
+cacheTTL = 86400
+serviceWorkerTTL = 86400
 
 # Add any additional configuration as needed 

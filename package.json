@@ -2,16 +2,27 @@
   "name": "edusoft",
   "version": "1.0.0",
   "description": "EduSoft is a comprehensive educational management system that provides a platform for supervisors and users to manage educational content and track progress.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "deploy": "npx wrangler deploy",
+    "deploy:pages": "npx wrangler pages deploy frontend/dist",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "start": "npx wrangler dev",
+    "preview": "cd frontend && npm run preview",
+    "setup": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "clean": "rm -rf frontend/dist && rm -rf node_modules && rm -rf frontend/node_modules && rm -rf backend/node_modules"
   },
-  "keywords": [],
+  "keywords": [
+    "education",
+    "management",
+    "assessment",
+    "cloudflare",
+    "react"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -27,5 +38,8 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "wrangler": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

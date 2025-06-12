@@ -1,0 +1,5 @@
+# Redirect all routes to index.html for client-side routing
+/*    /index.html   200
+
+# Redirect API requests to the backend API
+/api/*  https://api.edusoft-112.com/api/:splat  200 
