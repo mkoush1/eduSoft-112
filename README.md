@@ -119,6 +119,24 @@ The application will be available at:
 - GET /api/supervisors/dashboard - Get supervisor dashboard data
 - POST /api/supervisors/create-course - Create new course
 
+## Authentication
+
+The application uses a simple JWT-based authentication system. For demo purposes, the backend includes mock users with plaintext passwords:
+
+- User credentials: `user@example.com` / `password`
+- Supervisor credentials: `supervisor@example.com` / `password`
+
+### Recent Fixes
+
+We recently addressed authentication issues in the deployed application:
+
+1. Fixed JSON body parsing in the backend
+2. Simplified password verification for demo purposes
+3. Added detailed logging for troubleshooting
+4. Ensured proper CORS configuration for cross-origin requests
+
+For production use, this authentication system should be replaced with a more secure implementation using properly hashed passwords and a database.
+
 ## Contributing
 
 1. Fork the repository
