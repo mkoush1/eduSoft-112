@@ -3,19 +3,20 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// Mock user data for testing
+// Mock user data for testing - using plaintext passwords that will be compared directly
+// This is a temporary solution for the demo - in production, always use hashed passwords
 const users = [
   {
     id: '1',
     email: 'user@example.com',
-    password: '$2a$10$IbPgdXcGI8IMmCrHykhMuO/qfnkUuF4UZM04d9AK9uFepjS8XDo.G', // password: password
+    password: 'password', // Plain password for testing
     name: 'Test User',
     role: 'user'
   },
   {
     id: '2',
     email: 'supervisor@example.com',
-    password: '$2a$10$IbPgdXcGI8IMmCrHykhMuO/qfnkUuF4UZM04d9AK9uFepjS8XDo.G', // password: password
+    password: 'password', // Plain password for testing
     name: 'Test Supervisor',
     role: 'supervisor'
   }
@@ -48,10 +49,9 @@ router.post('/user/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    // TEMPORARY: Skip password check for testing
-    // const isMatch = await bcrypt.compare(password, user.password);
-    const isMatch = true; // Accept any password for testing
-    console.log('Password check bypassed for testing');
+    // Simple password comparison for demo
+    const isMatch = (password === user.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -106,10 +106,9 @@ router.post('/supervisor/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    // TEMPORARY: Skip password check for testing
-    // const isMatch = await bcrypt.compare(password, supervisor.password);
-    const isMatch = true; // Accept any password for testing
-    console.log('Password check bypassed for testing');
+    // Simple password comparison for demo
+    const isMatch = (password === supervisor.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -164,10 +163,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    // TEMPORARY: Skip password check for testing
-    // const isMatch = await bcrypt.compare(password, user.password);
-    const isMatch = true; // Accept any password for testing
-    console.log('Password check bypassed for testing');
+    // Simple password comparison for demo
+    const isMatch = (password === user.password);
+    console.log('Password match result:', isMatch);
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
