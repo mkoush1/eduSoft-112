@@ -26,7 +26,7 @@ const AssessmentManagement = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/assessments', {
+      const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/assessments`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -59,7 +59,7 @@ const AssessmentManagement = () => {
 
       console.log('Creating assessment:', assessmentData);
 
-      await axios.post('http://localhost:5000/api/assessments', assessmentData, {
+      await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/assessments`, assessmentData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ const AssessmentManagement = () => {
 
       console.log('Updating assessment:', assessmentData);
 
-      await axios.put(`http://localhost:5000/api/assessments/${selectedAssessment._id}`, assessmentData, {
+      await axios.put(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/assessments/${selectedAssessment._id}`, assessmentData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ const AssessmentManagement = () => {
 
       console.log('Deleting assessment:', assessmentId);
 
-      await axios.delete(`http://localhost:5000/api/assessments/${assessmentId}`, {
+      await axios.delete(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/assessments/${assessmentId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

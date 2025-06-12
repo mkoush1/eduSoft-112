@@ -8,8 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
-const API_URL = `${BACKEND_URL}/api/presentation-assessment`;
+const API_URL = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/presentation-assessment`;
 const JWT_TOKEN = 'YOUR_JWT_TOKEN'; // Replace with a valid JWT token
 
 // Sample files (create these in your project directory or update paths)
