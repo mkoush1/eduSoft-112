@@ -4,5 +4,13 @@
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ]
+    ],
+    "env": {
+        "VITE_REACT_APP_BACKEND_BASEURL": "https://edu-soft-main.vercel.app"
+    },
+    "build": {
+        "env": {
+            "VITE_REACT_APP_BACKEND_BASEURL": "https://edu-soft-main.vercel.app"
+        }
+    }
 }
