@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { BACKEND_URL } from '../config/constants';
 
 // Set the base URL for all API requests
 // In Create React App, environment variables need to be prefixed with REACT_APP_
-// If not available, default to localhost:5000
-const baseURL = 'http://localhost:5000';
+// If not available, default to the value from constants
+const baseURL = BACKEND_URL;
 
 // Create an axios instance with default configuration
 const api = axios.create({

@@ -80,6 +80,11 @@ MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 ```
 
+5. Create a .env file in the frontend directory with the following variables:
+```
+VITE_REACT_APP_BACKEND_BASEURL=http://localhost:5000
+```
+
 ### Running the Application
 
 1. Start the backend server:
@@ -96,7 +101,7 @@ npm run dev
 
 The application will be available at:
 - Frontend: http://localhost:5173
-- Backend: http://localhost:5000
+- Backend: http://localhost:5000 (or the value of VITE_REACT_APP_BACKEND_BASEURL)
 
 ## API Documentation
 

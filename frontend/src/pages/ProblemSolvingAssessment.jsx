@@ -13,7 +13,7 @@ const ProblemSolvingAssessment = () => {
       description: "Test your quick problem-solving abilities with time-limited questions",
       category: "Problem Solving",
       duration: 50,
-      image: "/Problem-Solving.jpg"
+      image: "/Problem Solving.png"
     },
     {
       _id: "puzzle-game",
@@ -21,7 +21,7 @@ const ProblemSolvingAssessment = () => {
       description: "Solve engaging puzzles to demonstrate your logical thinking skills",
       category: "Problem Solving",
       duration: 4,
-      image: "/Problem-Solving.jpg"
+      image: "/Problem Solving.png"
     },
     {
       _id: "leetcode",
@@ -29,7 +29,7 @@ const ProblemSolvingAssessment = () => {
       description: "Connect your LeetCode account and solve coding problems to demonstrate your programming skills",
       category: "LeetCode",
       duration: 30,
-      image: "/Problem-Solving.jpg"
+      image: "/Problem Solving.png"
     }
   ];
 

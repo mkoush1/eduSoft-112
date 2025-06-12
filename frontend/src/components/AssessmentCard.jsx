@@ -87,15 +87,15 @@ const AssessmentCard = ({ assessment, onViewResults }) => {
     const normalizedCategory = category.toString().toLowerCase().trim();
     
     if (normalizedCategory.includes('adaptability') || normalizedCategory.includes('flexibility')) {
-      return "/Adaptability-and-Flexibility.jpg";
+      return "/Adabtability.png";
     } else if (normalizedCategory.includes('communication')) {
-      return "/Communication.jpeg";
+      return "/Communication.png";
     } else if (normalizedCategory.includes('leadership')) {
-      return "/leadership.jpeg";
+      return "/Leadership.png";
     } else if (normalizedCategory.includes('presentation')) {
-      return "/presentation-skills.jpg";
+      return "/Presentation.png";
     } else if (normalizedCategory.includes('problem') || normalizedCategory.includes('solving')) {
-      return "/Problem-Solving.jpg";
+      return "/Problem Solving.png";
     } else if (normalizedCategory.includes('leetcode')) {
       return "/leetcode.jpg";
     }

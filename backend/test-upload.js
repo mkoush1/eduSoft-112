@@ -8,7 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const API_URL = 'http://localhost:5000/api/presentation-assessment';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const API_URL = `${BACKEND_URL}/api/presentation-assessment`;
 const JWT_TOKEN = 'YOUR_JWT_TOKEN'; // Replace with a valid JWT token
 
 // Sample files (create these in your project directory or update paths)

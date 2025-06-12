@@ -141,7 +141,7 @@ const PuzzleGame = ({ initialPuzzle, assessmentId }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `http://localhost:5000/api/puzzle/${puzzle._id}/time`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || 'http://localhost:5000'}/api/puzzle/${puzzle._id}/time`,
         { timeSpent },
         {
           headers: {
@@ -193,7 +193,7 @@ const PuzzleGame = ({ initialPuzzle, assessmentId }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5000/api/puzzle/${puzzle._id}/move`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || 'http://localhost:5000'}/api/puzzle/${puzzle._id}/move`,
         { row, col },
         {
           headers: {
@@ -255,7 +255,7 @@ const PuzzleGame = ({ initialPuzzle, assessmentId }) => {
         throw new Error('No refresh token available');
       }
 
-      const response = await axios.post('http://localhost:5000/api/auth/refresh-token', {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || 'http://localhost:5000'}/api/auth/refresh-token`, {
         refreshToken
       });
 
@@ -304,7 +304,7 @@ const PuzzleGame = ({ initialPuzzle, assessmentId }) => {
       }
 
       const response = await axios.post(
-        'http://localhost:5000/api/assessments/submit/puzzle-game',
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || 'http://localhost:5000'}/api/assessments/submit/puzzle-game`,
         { puzzleData: [puzzleData] },
         {
           headers: {
@@ -430,7 +430,7 @@ const PuzzleGame = ({ initialPuzzle, assessmentId }) => {
 
         try {
           const token = localStorage.getItem('token');
-          const res = await axios.get('http://localhost:5000/api/assessments/puzzle-game/user/me/results', {
+          const res = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || 'http://localhost:5000'}/api/assessments/puzzle-game/user/me/results`, {
             headers: { 
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json'
